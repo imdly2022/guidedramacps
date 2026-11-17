@@ -32,6 +32,14 @@ test("renders the complete guide and prominent search without development metada
     /^text\/html\b/i,
   );
   const html = await response.text();
+  assert.doesNotMatch(html, /\/workspace\/sites\//, "font URLs must not contain a build-machine path");
+  const fontPaths = [...html.matchAll(/href="([^"]+\.woff2)"/g)].map((match) => match[1]);
+  assert.ok(fontPaths.length > 0, "self-hosted fonts are preloaded");
+  for (const path of new Set(fontPaths)) {
+    assert.ok(path.startsWith("/assets/_vinext_fonts/"));
+    const font = await readFile(new URL(`../dist/client${path}`, import.meta.url));
+    assert.ok(font.byteLength > 0, `font asset is packaged: ${path}`);
+  }
   assert.doesNotMatch(html, developmentPreviewMeta);
   assert.match(html, /id="guide-search"/);
   assert.match(html, /搜索全部指南/);

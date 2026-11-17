@@ -16,6 +16,7 @@ const localBindingConfig = {
   account_id: "60195ed1b7b09566c8d6e093f5331627",
   compatibility_date: "2026-05-15",
   workers_dev: true,
+  preview_urls: false,
   main: "./worker/index.ts",
   compatibility_flags: ["nodejs_compat"],
   d1_databases: d1
